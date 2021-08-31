@@ -1,14 +1,14 @@
-from django.shortcuts import render
 from django.http import HttpResponse
 from students.models import Student
 from faker import Faker
 
 
-def generate_student(request):
-    cnt = request.GET.get('count')
-    if cnt is None:
+def generate_student(request, **kwargs):
+    if kwargs == {}:
         cnt = 1
-    elif cnt not in [str(i) for i in range(101)]:
+    else:
+        cnt = kwargs['count']
+    if cnt not in [i for i in range(101)]:
         return HttpResponse('Wrong input')
     fake = Faker()
     res = ''
