@@ -1,5 +1,7 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from groups.models import Group
+from .forms import CreateGroupForm
+from django.shortcuts import render
 
 
 def generate_groups(request):
@@ -24,3 +26,26 @@ def view_groups(request):
     for group in Group.objects.order_by('name'):
         res += str(group) + '<br>'
     return HttpResponse(res)
+
+
+def create_group_form(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = CreateGroupForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            data = {
+                'name': form.cleaned_data['name'],
+                'type': form.cleaned_data['type'],
+            }
+            group = Group(**data)
+            group.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect('/view_groups/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = CreateGroupForm()
+
+    return render(request, 'create_group.html', {'form': form})
