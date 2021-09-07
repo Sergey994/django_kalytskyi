@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.forms.models import model_to_dict
 from django.contrib import messages
 from django.shortcuts import redirect, render
+from django.core.exceptions import ValidationError
 
 
 from students.models import Student
@@ -25,7 +26,7 @@ def generate_student(request, **kwargs):
         fake_student = {
             'first_name': fake.first_name(),
             'last_name': fake.last_name(),
-            'age': fake.random_int(min=18, max=100)
+            'age': fake.random_int(min=18, max=100),
         }
         student = Student(**fake_student)
         student.save()
@@ -44,8 +45,11 @@ def create_student_form(request):
             data = {
                 'first_name': form.cleaned_data['first_name'],
                 'last_name': form.cleaned_data['last_name'],
-                'age': form.cleaned_data['age']
+                'age': form.cleaned_data['age'],
+                'phone': form.cleaned_data['phone']
             }
+            if not data['phone'].isnumeric():
+                raise ValidationError('Incorrect phone format')
             student = Student(**data)
             student.save()
             # redirect to a new URL:
