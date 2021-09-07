@@ -26,8 +26,10 @@ def generate_teachers(request):
 
 
 def view_teachers(request):
-    # Returns all teachers in db
+    args = {}
+    for i in request.GET.keys():
+        args[i] = request.GET[i]
     res = ''
-    for teacher in Teacher.objects.order_by('first_name'):
+    for teacher in Teacher.objects.filter(**args):
         res += str(teacher) + '<br>'
     return HttpResponse(res)
