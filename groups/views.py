@@ -1,7 +1,13 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from groups.models import Group
-from .forms import CreateGroupForm
 from django.shortcuts import render
+from django.urls import reverse
+from django.forms.models import model_to_dict
+from django.contrib import messages
+from django.shortcuts import redirect, render
+
+
+from groups.models import Group
+from .forms import GroupForm
 
 
 def generate_groups(request):
@@ -21,18 +27,15 @@ def generate_groups(request):
 
 
 def view_groups(request):
-    # Returns all the groups in db
-    res = ''
-    for group in Group.objects.order_by('name'):
-        res += str(group) + '<br>'
-    return HttpResponse(res)
+    groups_list = Group.objects.all()
+    return render(request, 'groups_list.html', {'groups': groups_list})
 
 
 def create_group_form(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = CreateGroupForm(request.POST)
+        form = GroupForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             data = {
@@ -42,10 +45,29 @@ def create_group_form(request):
             group = Group(**data)
             group.save()
             # redirect to a new URL:
-            return HttpResponseRedirect('/view_groups/')
+            return HttpResponseRedirect('/groups/view/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = CreateGroupForm()
+        form = GroupForm()
 
     return render(request, 'create_group.html', {'form': form})
+
+
+def edit_group(request, group_id):
+    if request.method == 'POST':
+        form = GroupForm(request.POST)
+        if form.is_valid():
+            Group.objects.update_or_create(defaults=form.cleaned_data, id=group_id)
+            return HttpResponseRedirect(reverse('view-groups'))
+    else:
+        group = Group.objects.filter(id=group_id).first()
+        form = GroupForm(model_to_dict(group))
+
+    return render(request, 'edit_group.html', {'form': form, 'group_id': group_id})
+
+
+def delete_group(request, group_id):
+    Group.objects.filter(id=group_id).first().delete()
+    return HttpResponseRedirect(reverse('view-groups'))
+

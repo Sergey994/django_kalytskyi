@@ -1,7 +1,14 @@
 from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import reverse
+from django.forms.models import model_to_dict
+from django.contrib import messages
+from django.shortcuts import redirect, render
+
+
 from teachers.models import Teacher
 from faker import Faker
-from .forms import CreateTeacherForm
+from .forms import TeacherForm
 from django.shortcuts import render
 
 
@@ -28,20 +35,15 @@ def generate_teachers(request):
 
 
 def view_teachers(request):
-    args = {}
-    for i in request.GET.keys():
-        args[i] = request.GET[i]
-    res = ''
-    for teacher in Teacher.objects.filter(**args):
-        res += str(teacher) + '<br>'
-    return HttpResponse(res)
+    teachers_list = Teacher.objects.all()
+    return render(request, 'teachers_list.html', {'teachers': teachers_list})
 
 
 def create_teacher_form(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = CreateTeacherForm(request.POST)
+        form = TeacherForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             data = {
@@ -52,10 +54,28 @@ def create_teacher_form(request):
             teacher = Teacher(**data)
             teacher.save()
             # redirect to a new URL:
-            return HttpResponseRedirect('/view_teachers/')
+            return HttpResponseRedirect('/teachers/view/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = CreateTeacherForm()
+        form = TeacherForm()
 
     return render(request, 'create_teacher.html', {'form': form})
+
+
+def edit_teacher(request, teacher_id):
+    if request.method == 'POST':
+        form = TeacherForm(request.POST)
+        if form.is_valid():
+            Teacher.objects.update_or_create(defaults=form.cleaned_data, id=teacher_id)
+            return HttpResponseRedirect(reverse('view-teachers'))
+    else:
+        teacher = Teacher.objects.filter(id=teacher_id).first()
+        form = TeacherForm(model_to_dict(teacher))
+
+    return render(request, 'edit_teacher.html', {'form': form, 'teacher_id': teacher_id})
+
+
+def delete_teacher(request, teacher_id):
+    Teacher.objects.filter(id=teacher_id).first().delete()
+    return HttpResponseRedirect(reverse('view-teachers'))

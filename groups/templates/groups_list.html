@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block head %}
+    {{ block.super }}
+    <style type="text/css">
+
+    </style>
+{% endblock %}
+{% block content %}
+    <a href="/students/view">Students</a>
+    <a href="/teachers/view">Teachers</a>
+    <a href="/groups/view">Groups</a>
+    <h1>Groups List</h1>
+    <a href="{% url 'create-group' %}">Add new</a>
+    <ul>
+        {% for group in groups %}
+        <li>
+            {{ group.id|safe }}. {{ group.name|safe }} {{ group.type|safe }}
+            <a href="{% url 'edit-group' group.id %}">Edit</a>
+            <a href="{% url 'delete-group' group.id %}">Delete</a>
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

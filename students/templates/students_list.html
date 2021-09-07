@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block head %}
+    {{ block.super }}
+    <style type="text/css">
+
+    </style>
+{% endblock %}
+{% block content %}
+    <a href="/students/view">Students</a>
+    <a href="/teachers/view">Teachers</a>
+    <a href="/groups/view">Groups</a>
+    <h1>Students List</h1>
+    <a href="{% url 'create-student' %}">Add new</a>
+    <ul>
+        {% for student in students %}
+        <li>
+            {{ student.id|safe }}. {{ student.first_name|safe }}
+            {{ student.last_name|safe }} {{ student.age|safe }}
+            <a href="{% url 'edit-student' student.id %}">Edit</a>
+            <a href="{% url 'delete-student' student.id %}">Delete</a>
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
