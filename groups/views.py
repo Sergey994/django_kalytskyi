@@ -5,6 +5,9 @@ from django.forms.models import model_to_dict
 from django.contrib import messages
 from django.shortcuts import redirect, render
 
+from django.dispatch import receiver
+
+
 
 from groups.models import Group
 from .forms import GroupForm

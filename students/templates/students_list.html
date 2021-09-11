@@ -6,6 +6,7 @@
     </style>
 {% endblock %}
 {% block content %}
+    <a href="/admin">Admin</a>
     <a href="/students/view">Students</a>
     <a href="/teachers/view">Teachers</a>
     <a href="/groups/view">Groups</a>
@@ -16,6 +17,7 @@
         <li>
             {{ student.id|safe }}. {{ student.first_name|safe }}
             {{ student.last_name|safe }} {{ student.age|safe }}
+            {{ student.phone|safe }}
             <a href="{% url 'edit-student' student.id %}">Edit</a>
             <a href="{% url 'delete-student' student.id %}">Delete</a>
         </li>
