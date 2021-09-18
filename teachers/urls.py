@@ -14,4 +14,5 @@ urlpatterns = [
     path('create/', create_teacher_form, name='create-teacher'),
     path('edit<int:teacher_id>', edit_teacher, name='edit-teacher'),
     path('delete<int:teacher_id>', delete_teacher, name='delete-teacher'),
+    path('', view_teachers)
 ]

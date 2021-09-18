@@ -1,0 +1,25 @@
+{% extends "main.html" %}
+{% block head %}
+    {{ block.super }}
+    <style type="text/css">
+
+    </style>
+{% endblock %}
+{% block content %}
+<h2>
+    <ul>
+        <li>
+            <a href="/admin">Admin</a>
+        </li>
+        <li>
+            <a href="/students/view">Students</a>
+        </li>
+        <li>
+            <a href="/teachers/view">Teachers</a>
+        </li>
+        <li>
+            <a href="/groups/view">Groups</a>
+        </li>
+    </ul>
+</h2>
+{% endblock %}

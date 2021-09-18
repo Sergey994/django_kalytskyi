@@ -14,4 +14,5 @@ urlpatterns = [
     path('create/', create_group_form, name='create-group'),
     path('edit<int:group_id>', edit_group, name='edit-group'),
     path('delete<int:group_id>', delete_group, name='delete-group'),
+    path('', view_groups)
 ]

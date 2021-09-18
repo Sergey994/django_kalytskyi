@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "main.html" %}
 {% block head %}
     {{ block.super }}
     <style type="text/css">
@@ -6,10 +6,7 @@
     </style>
 {% endblock %}
 {% block content %}
-    <a href="/admin">Admin</a>
-    <a href="/students/view">Students</a>
-    <a href="/teachers/view">Teachers</a>
-    <a href="/groups/view">Groups</a>
+
     <h1>Students List</h1>
     <a href="{% url 'create-student' %}">Add new</a>
     <ul>
