@@ -1,6 +1,7 @@
 from celery import shared_task
-from .models import Student, Mail
+from .models import Student, Log
 from faker import Faker
+import datetime
 
 from django.core.mail import send_mail
 
@@ -24,6 +25,13 @@ def generate_stud(cnt):
 
 @shared_task()
 def contact_mail(data):
-    send_mail(subject=data['title'], message=data['message'], from_email=Mail.objects.first()['address'],
-              recipient_list=[data['email_from']], fail_silently=False, auth_user=Mail.objects.first()['address'],
-              auth_password=Mail.objects.first()['password'])
+    send_mail(subject=data['title'], message=data['message'],
+              recipient_list=[data['email_from']], fail_silently=False)
+
+
+@shared_task()
+def delete_logs():
+    logs = Log.objects.all()
+    for log in logs:
+        if (datetime.datetime.now() - datetime.datetime.strptime(log.created, '%m/%d/%Y, %H:%M:%S')) > datetime.timedelta(7):
+            log.delete()

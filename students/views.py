@@ -5,11 +5,12 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 
 
-from students.models import Student
-from faker import Faker
+from students.models import Student, Log
 from .forms import StudentForm, ContactForm
 
 from .tasks import generate_stud, contact_mail
+
+import datetime
 
 
 def generate_student(request, **kwargs):
@@ -73,7 +74,10 @@ def delete_student(request, student_id):
 
 
 def index(request):
-    return render(request, 'index.html')
+    #return render(request, 'index.html')
+    logs = Log.objects.all()
+    for log in logs:
+        return HttpResponse((datetime.datetime.now() - datetime.datetime.strptime(log.created, '%m/%d/%Y, %H:%M:%S'))>datetime.timedelta(0,10))
 
 
 def contact(request):
@@ -86,6 +90,8 @@ def contact(request):
                 'email_from': form.cleaned_data['email_from'],
             }
             contact_mail.delay(data)
+            messages.success(request, 'Mail is sent')
+
             return HttpResponseRedirect(reverse('view-students'))
     else:
         form = ContactForm()

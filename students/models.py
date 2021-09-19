@@ -16,9 +16,5 @@ class Log(models.Model):
     path = models.CharField(max_length=200)
     method = models.CharField(max_length=200)
     time = models.FloatField()
-    created = models.CharField(max_length=200)
+    created = models.CharField(max_length=200, blank=True)
 
-
-class Mail(models.Model):
-    address = models.CharField(max_length=200)
-    password = models.CharField(max_length=200)

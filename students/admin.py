@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Student, Log, Mail
+from .models import Student, Log
 
 
 @admin.register(Student)
@@ -11,9 +11,4 @@ class TeacherAdmin(admin.ModelAdmin):
 
 @admin.register(Log)
 class LogAdmin(admin.ModelAdmin):
-    list_display = ("path", "method", "time")
-
-
-@admin.register(Mail)
-class MailAdmin(admin.ModelAdmin):
-    list_display = ("address", "password")
+    list_display = ("path", "method", "time", "created")
