@@ -1,17 +1,16 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
 from django.urls import reverse
 from django.forms.models import model_to_dict
 from django.contrib import messages
 from django.shortcuts import redirect, render
+
 
 from groups.models import Group
 from .forms import GroupForm
 
 
 def generate_groups(request):
-    # Generates groups by list
-    res = ''
+    #Generates groups by list
     group_names = ['python', 'java', 'VB']
     for i in range(len(group_names)):
         fake_group = {
@@ -20,9 +19,7 @@ def generate_groups(request):
         }
         group = Group(**fake_group)
         group.save()
-        res += str(group) + '<br>'
-    res += str(len(group_names)) + ' groups created.'
-    return HttpResponse(res)
+    return HttpResponseRedirect(reverse('view-groups'))
 
 
 def view_groups(request):
