@@ -63,9 +63,13 @@ def edit_student(request, student_id):
             return HttpResponseRedirect(reverse('view-students'))
     else:
         student = Student.objects.filter(id=student_id).first()
+        student_groups = student.group_set.all()
+        groups = []
+        for group in student_groups:
+            groups.append(group)
         form = StudentForm(model_to_dict(student))
 
-    return render(request, 'edit_student.html', {'form': form, 'student_id': student_id})
+    return render(request, 'edit_student.html', {'form': form, 'student_id': student_id, 'groups': groups})
 
 
 def delete_student(request, student_id):

@@ -103,9 +103,13 @@ def edit_teacher(request, teacher_id):
             return HttpResponseRedirect(reverse('view-teachers'))
     else:
         teacher = Teacher.objects.filter(id=teacher_id).first()
+        teacher_groups = teacher.group_set.all()
+        groups = []
+        for group in teacher_groups:
+            groups.append(str(group))
         form = TeacherForm(model_to_dict(teacher))
 
-    return render(request, 'edit_teacher.html', {'form': form, 'teacher_id': teacher_id})
+    return render(request, 'edit_teacher.html', {'form': form, 'teacher_id': teacher_id, 'groups': groups})
 
 
 def delete_teacher(request, teacher_id):
