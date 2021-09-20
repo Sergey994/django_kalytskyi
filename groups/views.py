@@ -27,7 +27,15 @@ def generate_groups(request):
 
 def view_groups(request):
     groups_list = Group.objects.all()
-    return render(request, 'groups_list.html', {'groups': groups_list})
+    data = []
+    for group in groups_list:
+        data.append({
+            'id': group.id,
+            'name': group.name,
+            'type': group.type,
+            'students': [str(student) for student in group.students.all()]
+        })
+    return render(request, 'groups_list.html', {'groups': data})
 
 
 def create_group_form(request):

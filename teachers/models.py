@@ -7,4 +7,4 @@ class Teacher(models.Model):
     age = models.IntegerField(default=20)
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name}, {self.age}'
+        return f'{self.first_name} {self.last_name}'

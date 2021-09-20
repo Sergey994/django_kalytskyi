@@ -74,10 +74,7 @@ def delete_student(request, student_id):
 
 
 def index(request):
-    #return render(request, 'index.html')
-    logs = Log.objects.all()
-    for log in logs:
-        return HttpResponse((datetime.datetime.now() - datetime.datetime.strptime(log.created, '%m/%d/%Y, %H:%M:%S'))>datetime.timedelta(0,10))
+    return render(request, 'index.html')
 
 
 def contact(request):
