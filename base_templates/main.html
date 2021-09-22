@@ -18,6 +18,16 @@
         {% endfor %}
     </ul>
     {% endif %}
-    <div id="content">{% block content %}{% endblock %}</div>
+
+    <div id="content">
+        <a href="/admin">Admin</a>
+        <a href="/students/view">Students</a>
+        <a href="/teachers/view">Teachers</a>
+        <a href="/groups/view">Groups</a>
+        <a href="/students/contact">Contact us</a>
+        {% block content %}
+
+        {% endblock %}
+    </div>
 </body>
 </html>

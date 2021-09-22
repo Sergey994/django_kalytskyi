@@ -1,16 +1,16 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
 from django.urls import reverse
 from django.forms.models import model_to_dict
 from django.contrib import messages
 from django.shortcuts import redirect, render
-from django.core.exceptions import ValidationError
 
 
-from students.models import Student
-from faker import Faker
-from .forms import StudentForm
-from django.shortcuts import render
+from students.models import Student, Log
+from .forms import StudentForm, ContactForm
+
+from .tasks import generate_stud, contact_mail
+
+import datetime
 
 
 def generate_student(request, **kwargs):
@@ -20,19 +20,9 @@ def generate_student(request, **kwargs):
         cnt = kwargs['count']
     if cnt not in [i for i in range(101)]:
         return HttpResponse('Wrong input')
-    fake = Faker()
-    res = ''
-    for i in range(int(cnt)):
-        fake_student = {
-            'first_name': fake.first_name(),
-            'last_name': fake.last_name(),
-            'age': fake.random_int(min=18, max=100),
-        }
-        student = Student(**fake_student)
-        student.save()
-        res += str(student) + '<br>'
-    res += str(cnt) + ' students created.'
-    return HttpResponse(res)
+    generate_stud.delay(cnt)
+    messages.success(request, 'We are generating your random users! Wait a moment and refresh this page.')
+    return redirect('view-students')
 
 
 def create_student_form(request):
@@ -48,8 +38,6 @@ def create_student_form(request):
                 'age': form.cleaned_data['age'],
                 'phone': form.cleaned_data['phone']
             }
-            if not data['phone'].isnumeric():
-                raise ValidationError('Incorrect phone format')
             student = Student(**data)
             student.save()
             # redirect to a new URL:
@@ -83,3 +71,29 @@ def edit_student(request, student_id):
 def delete_student(request, student_id):
     Student.objects.filter(id=student_id).first().delete()
     return HttpResponseRedirect(reverse('view-students'))
+
+
+def index(request):
+    #return render(request, 'index.html')
+    logs = Log.objects.all()
+    for log in logs:
+        return HttpResponse((datetime.datetime.now() - datetime.datetime.strptime(log.created, '%m/%d/%Y, %H:%M:%S'))>datetime.timedelta(0,10))
+
+
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            data = {
+                'title': form.cleaned_data['title'],
+                'message': form.cleaned_data['message'],
+                'email_from': form.cleaned_data['email_from'],
+            }
+            contact_mail.delay(data)
+            messages.success(request, 'Mail is sent')
+
+            return HttpResponseRedirect(reverse('view-students'))
+    else:
+        form = ContactForm()
+
+    return render(request, 'contact.html', {'form': form})

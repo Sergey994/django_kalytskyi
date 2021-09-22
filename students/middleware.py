@@ -17,7 +17,8 @@ class LogMiddleware:
             data = {
                 'path': request.path,
                 'method': request.method,
-                'time': t2 - t1
+                'time': t2 - t1,
+                'created': time.strftime('%m/%d/%Y, %H:%M:%S'),
             }
             log = Log(**data)
             log.save()

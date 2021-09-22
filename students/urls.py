@@ -5,7 +5,8 @@ from .views import (
     create_student_form,
     view_students,
     edit_student,
-    delete_student
+    delete_student,
+    contact,
 )
 
 urlpatterns = [
@@ -15,4 +16,6 @@ urlpatterns = [
     path('view/', view_students, name='view-students'),
     path('edit<int:student_id>', edit_student, name='edit-student'),
     path('delete<int:student_id>', delete_student, name='delete-student'),
+    path('contact/', contact, name='contact'),
+    path('', view_students)
 ]

@@ -10,5 +10,5 @@ class TeacherAdmin(admin.ModelAdmin):
 
 
 @admin.register(Log)
-class TeacherAdmin(admin.ModelAdmin):
-    list_display = ("path", "method", "time")
+class LogAdmin(admin.ModelAdmin):
+    list_display = ("path", "method", "time", "created")
