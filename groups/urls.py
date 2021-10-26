@@ -9,7 +9,7 @@ from .views import (
 )
 
 urlpatterns = [
-    path('generate/', generate_groups, name='generate-groups'),
+    #path('generate/', generate_groups, name='generate-groups'),
     path('view/', view_groups, name='view-groups'),
     path('create/', create_group_form, name='create-group'),
     path('edit<int:group_id>', edit_group, name='edit-group'),

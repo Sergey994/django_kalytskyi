@@ -1,5 +1,22 @@
+{% extends "main.html" %}
+{% block head %}
+    {{ block.super }}
+    <style type="text/css">
+
+    </style>
+{% endblock %}
+{% block content %}
 <form action="{% url 'edit-student' student_id %}" method="post">
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="Submit">
+        {% for group in groups %}
+    <h3>
+        Groups list
+    </h3>
+    <ul>
+        <li>{{ group }}</li>
+    </ul>
+    {% endfor %}
 </form>
+{% endblock %}

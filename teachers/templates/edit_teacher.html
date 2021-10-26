@@ -2,4 +2,12 @@
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="Submit">
+    {% for group in groups %}
+    <h3>
+        Groups list
+    </h3>
+    <ul>
+        <li>{{ group }}</li>
+    </ul>
+    {% endfor %}
 </form>

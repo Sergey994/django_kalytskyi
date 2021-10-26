@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 
 
-from students.models import Student, Log
+from students.models import Student, Log, Exchange
 from .forms import StudentForm, ContactForm
 
 from .tasks import generate_stud, contact_mail
@@ -63,9 +63,13 @@ def edit_student(request, student_id):
             return HttpResponseRedirect(reverse('view-students'))
     else:
         student = Student.objects.filter(id=student_id).first()
+        student_groups = student.group_set.all()
+        groups = []
+        for group in student_groups:
+            groups.append(group)
         form = StudentForm(model_to_dict(student))
 
-    return render(request, 'edit_student.html', {'form': form, 'student_id': student_id})
+    return render(request, 'edit_student.html', {'form': form, 'student_id': student_id, 'groups': groups})
 
 
 def delete_student(request, student_id):
@@ -73,11 +77,11 @@ def delete_student(request, student_id):
     return HttpResponseRedirect(reverse('view-students'))
 
 
+import requests
 def index(request):
     #return render(request, 'index.html')
-    logs = Log.objects.all()
-    for log in logs:
-        return HttpResponse((datetime.datetime.now() - datetime.datetime.strptime(log.created, '%m/%d/%Y, %H:%M:%S'))>datetime.timedelta(0,10))
+    exhange_response = requests.get('https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11')
+    return HttpResponse(exhange_response.json())
 
 
 def contact(request):
@@ -97,3 +101,8 @@ def contact(request):
         form = ContactForm()
 
     return render(request, 'contact.html', {'form': form})
+
+
+def list_exchange_rates(request):
+    exchange_list = Exchange.objects.all()
+    return HttpResponse(exchange_list)
