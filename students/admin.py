@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Student, Log
+from .models import Student, Log, Exchange
 
 
 @admin.register(Student)
@@ -12,3 +12,8 @@ class TeacherAdmin(admin.ModelAdmin):
 @admin.register(Log)
 class LogAdmin(admin.ModelAdmin):
     list_display = ("path", "method", "time", "created")
+
+
+@admin.register(Exchange)
+class LogAdmin(admin.ModelAdmin):
+    list_display =("currency", "source", "buy_price", "sell_price")

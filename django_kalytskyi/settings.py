@@ -141,6 +141,14 @@ CELERY_BEAT_SCHEDULE = {
     'beat': {
         'task': 'students.tasks.delete_logs',
         'schedule': crontab(minute=0, hour=0),
+    },
+    'currency_pb': {
+        'task': 'students.tasks.get_currency_rates_pb',
+        'schedule': crontab(minute=0, hour=0),
+    },
+    'currency_mb': {
+        'task': 'students.tasks.get_currency_rates_mb',
+        'schedule': crontab(minute=0, hour=0),
     }
 }
 
@@ -151,3 +159,10 @@ EMAIL_HOST = ''
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 465
+
+
+# python manage.py runserver & \
+#     celery -A django_kalytskyi worker -l info --concurrency 1 -P solo & \
+#     celery -A django_kalytskyi beat -l info
+
+# celery -A django_kalytskyi worker -l info --concurrency 1 -P solo

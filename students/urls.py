@@ -7,6 +7,7 @@ from .views import (
     edit_student,
     delete_student,
     contact,
+    list_exchange_rates,
 )
 
 urlpatterns = [
@@ -17,5 +18,6 @@ urlpatterns = [
     path('edit<int:student_id>', edit_student, name='edit-student'),
     path('delete<int:student_id>', delete_student, name='delete-student'),
     path('contact/', contact, name='contact'),
+    path('exchange/', list_exchange_rates, name='contact'),
     path('', view_students)
 ]

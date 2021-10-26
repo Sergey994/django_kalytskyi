@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 
 
-from students.models import Student, Log
+from students.models import Student, Log, Exchange
 from .forms import StudentForm, ContactForm
 
 from .tasks import generate_stud, contact_mail
@@ -77,8 +77,11 @@ def delete_student(request, student_id):
     return HttpResponseRedirect(reverse('view-students'))
 
 
+import requests
 def index(request):
-    return render(request, 'index.html')
+    #return render(request, 'index.html')
+    exhange_response = requests.get('https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11')
+    return HttpResponse(exhange_response.json())
 
 
 def contact(request):
@@ -98,3 +101,8 @@ def contact(request):
         form = ContactForm()
 
     return render(request, 'contact.html', {'form': form})
+
+
+def list_exchange_rates(request):
+    exchange_list = Exchange.objects.all()
+    return HttpResponse(exchange_list)
